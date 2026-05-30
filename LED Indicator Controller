@@ -1,0 +1,15 @@
+Design code 
+module led_controller(
+    input power_on,
+    output reg led
+);
+
+always @(*)
+begin
+    if(power_on)
+        led = 1'b1;
+    else
+        led = 1'b0;
+end
+
+endmodule
