@@ -1,0 +1,116 @@
+Design code
+module earbud_controller(
+    input clk,
+    input power_btn,
+    input touch,
+    input charge_connected,
+    input in_ear,
+    input [7:0] battery_level,
+
+    output reg led,
+    output reg music,
+    output reg charging,
+    output reg low_battery
+);
+
+always @(posedge clk)
+begin
+
+    // Power ON/OFF
+    if(power_btn)
+        led <= ~led;
+
+    // Play/Pause
+    if(touch && in_ear)
+        music <= ~music;
+
+    // Charging Status
+    if(charge_connected)
+        charging <= 1;
+    else
+        charging <= 0;
+
+    // Low Battery Detection
+    if(battery_level < 8'd20)
+        low_battery <= 1;
+    else
+        low_battery <= 0;
+
+end
+
+endmodule
+
+Test bench code
+module tb;
+
+reg clk;
+reg power_btn;
+reg touch;
+reg charge_connected;
+reg in_ear;
+reg [7:0] battery_level;
+
+wire led;
+wire music;
+wire charging;
+wire low_battery;
+
+earbud_controller uut(
+    .clk(clk),
+    .power_btn(power_btn),
+    .touch(touch),
+    .charge_connected(charge_connected),
+    .in_ear(in_ear),
+    .battery_level(battery_level),
+    .led(led),
+    .music(music),
+    .charging(charging),
+    .low_battery(low_battery)
+);
+
+always #5 clk = ~clk;
+
+initial
+begin
+    clk = 0;
+    power_btn = 0;
+    touch = 0;
+    charge_connected = 0;
+    in_ear = 0;
+    battery_level = 50;
+
+    // Power ON
+    #10;
+    power_btn = 1;
+    #10;
+    power_btn = 0;
+
+    // Insert Earbud
+    #10;
+    in_ear = 1;
+
+    // Touch -> Play
+    #10;
+    touch = 1;
+    #10;
+    touch = 0;
+
+    // Start Charging
+    #20;
+    charge_connected = 1;
+
+    // Battery Low
+    #20;
+    battery_level = 15;
+
+    #50;
+    $finish;
+end
+
+initial
+begin
+    $monitor("Time=%0t LED=%b Music=%b Charging=%b LowBattery=%b Battery=%d",
+              $time,led,music,charging,low_battery,battery_level);
+end
+
+endmodule
