@@ -1,0 +1,13 @@
+Design code
+module touch_controller(
+    input touch,
+    output reg play_pause
+);
+
+always @(*)
+begin
+    if(touch)
+        play_pause = 1;
+    else
+        play_pause = 0;
+end
