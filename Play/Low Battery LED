@@ -1,0 +1,4 @@
+if(low_battery)
+    led = 1;
+else
+    led = 0;
