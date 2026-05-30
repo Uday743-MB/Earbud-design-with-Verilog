@@ -1,0 +1,14 @@
+design code
+module play_pause(
+    input clk,
+    input touch,
+    output reg music
+);
+
+always @(posedge clk)
+begin
+    if(touch)
+        music <= ~music;
+end
+
+endmodule
