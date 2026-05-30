@@ -1,0 +1,15 @@
+deisgn code
+module battery_monitor(
+    input [7:0] battery,
+    output reg low_battery
+);
+
+always @(*)
+begin
+    if(battery < 20)
+        low_battery = 1;
+    else
+        low_battery = 0;
+end
+
+endmodule
